@@ -24,5 +24,15 @@ namespace PrintManagementSystem_Чернышков
         {
             InitializeComponent();
         }
+
+        private void DeleteOperation(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void EditOperation(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
