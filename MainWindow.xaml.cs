@@ -264,5 +264,113 @@ namespace PrintManagementSystem_Чернышков
 
             CostCalculations(); 
         }
+        private void textBoxCount_TextChanged(object sender, TextChangedEventArgs e) =>
+            CostCalculations();
+
+        private void ColorsChange(object sender, RoutedEventArgs e) =>
+            CostCalculations();
+
+        private void AddOperation(object sender, RoutedEventArgs e)
+        {
+            TypeOperationsWindow newTOW = new TypeOperationsWindow();
+            newTOW.typeOperationText = TypeOperation.SelectedItem as String;
+            newTOW.typeOperation = typeOperationList.Find(x => x.name == newTOW.typeOperationText).id;
+
+            if (formats.SelectedIndex != -1)
+            {
+                newTOW.formatText = formats.SelectedItem as String;
+                newTOW.format = formatsList.Find(x => x.format == newTOW.formatText).id;
+            }
+            if (TwoSides.IsEnabled == true)
+            {
+                if (TwoSides.IsChecked == false)
+                    newTOW.side = 1;
+                else
+                    newTOW.side = 2;
+            }
+
+            if (Colors.IsChecked == false)
+            {
+                newTOW.colorText += "Ч/Б";
+                newTOW.color = false;
+
+                if (LotOfColor.IsChecked == true)
+                {
+                    newTOW.colorText += "(> 50%)";
+                    newTOW.occupancy = true;
+                }
+            }
+            else
+            {
+                newTOW.colorText = "ЦВ";
+                newTOW.color = true;
+
+                if (LotOfColor.IsChecked == true)
+                {
+                    newTOW.colorText += "(> 50%)";
+                    newTOW.occupancy = true;
+                }
+            }
+
+            newTOW.count = int.Parse(textBoxCount.Text);
+            newTOW.price = float.Parse(textBoxPrice.Text);
+            addOperationButton.Content = "Добавить";
+            Operations.Items.Add(newTOW);
+            CalculationsAllPrice();
+        }
+        
+        private void EditOperation(object sender, RoutedEventArgs e)
+        {
+            if (Operations.SelectedIndex != -1)
+            {
+                TypeOperationsWindow newTOW = Operations.Items[Operations.SelectedIndex] as TypeOperationsWindow;
+
+                typeOperation.SelectedItem = typeOperationList.Find(x => x.id == newTOW.typeOperation).name;
+                formats.SelectedItem = formatsList.Find(x => x.id == newTOW.format).format;
+
+                if (newTOW.side == 1) TwoSides.IsChecked = false;
+                else if (newTOW.side == 2) TwoSides.IsChecked = true;
+
+                Colors.IsChecked = newTOW.color;
+
+                string[] resultColor = newTOW.colorText.Split(' ');
+                if (resultColor.Length == 1) LotOfColor.IsChecked = false;
+                else if (resultColor.Length == 2) LotOfColor.IsChecked = true;
+
+                textBoxCount.Text = newTOW.count.ToString();
+                textBoxPrice.Text = newTOW.price.ToString();
+
+                addOperationButton.Content = "Изменить";
+
+                Operations.Items.Remove(Operations.Items[Operations.SelectedIndex]);
+            }
+            else MessageBox.Show("Пожалуйста, выберите операцию для редактирования.");
+        }
+        
+        private void DeleteOperation(object sender, RoutedEventArgs e)
+        {
+            if (Operations.SelectedIndex != -1)
+            {
+                Operations.Items.Remove(Operations.Items[Operations.SelectedIndex]);
+                CalculationsAllPrice();
+            }
+            else
+            {
+                MessageBox.Show("Пожалуйста, выберите операцию для удаления.");
+            }
+        }
+        
+        public void CalculationsAllPrice()
+        {
+            float allPrice = 0;
+            for (int i = 0; i < Operations.Items.Count; i++)
+            {
+                TypeOperationsWindow newTOW = Operations.Items[i] as TypeOperationsWindow;
+                allPrice += newTOW.price;
+            }
+            labelAllPrice.Content = "Общая сумма: " + allPrice;
+        }
+
+
     }
 }
