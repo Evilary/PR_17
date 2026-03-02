@@ -222,7 +222,7 @@ namespace PrintManagementSystem_Чернышков
                     Colors.IsEnabled = true;
                     LotOfColor.IsEnabled = true;
                 }
-                else if (typeOperation.SelectedItem as String == "Размер") // Размер
+                else if (typeOperation.SelectedItem as String == "Размер") 
                 {
                     formats.SelectedIndex = 0;
                     formats.IsEnabled = false;
@@ -273,7 +273,7 @@ namespace PrintManagementSystem_Чернышков
         private void AddOperation(object sender, RoutedEventArgs e)
         {
             TypeOperationsWindow newTOW = new TypeOperationsWindow();
-            newTOW.typeOperationText = TypeOperation.SelectedItem as String;
+            newTOW.typeOperationText = typeOperation.SelectedItem as String;
             newTOW.typeOperation = typeOperationList.Find(x => x.name == newTOW.typeOperationText).id;
 
             if (formats.SelectedIndex != -1)
@@ -317,6 +317,7 @@ namespace PrintManagementSystem_Чернышков
             addOperationButton.Content = "Добавить";
             Operations.Items.Add(newTOW);
             CalculationsAllPrice();
+
         }
         
         private void EditOperation(object sender, RoutedEventArgs e)
